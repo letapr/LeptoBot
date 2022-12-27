@@ -1,16 +1,41 @@
-# This is a sample Python script.
+import os
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from discord.ext import commands
+import discord
+from dotenv import load_dotenv
 
+from lepto import random_action
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('lepto')
+    load_dotenv()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    class MyClient(discord.Client):
+        async def on_ready(self):
+            print('Logged on as', self.user)
+
+        async def on_message(self, message):
+            # don't respond to ourselves
+            if message.author == self.user:
+                return
+
+            if message.content == 'ping':
+                await message.channel.send('pong')
+
+
+    intents = discord.Intents.default()
+    intents.message_content = True
+    client = MyClient(intents=intents)
+    client.run(os.environ["DISCORD_TOKEN"])
+
+
+    intents = discord.Intents.default()
+    intents.message_content = True
+    bot = commands.Bot(command_prefix='>', intents=intents)
+
+
+    @bot.command()
+    async def ping(ctx):
+        await ctx.send('pong')
+
+
+    bot.run(os.environ["DISCORD_TOKEN"])
