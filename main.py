@@ -7,6 +7,7 @@ import openai
 
 if __name__ == '__main__':
     load_dotenv()
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
     class MyClient(discord.Client):
@@ -14,16 +15,19 @@ if __name__ == '__main__':
             print('Logged on as', self.user)
 
         async def on_message(self, message):
-            # don't respond to ourselves
+            print("received: " + message.content)
             if message.author == self.user:
                 return
 
-            if str.lower(message.content[:8]) == '@leptobot':
+            if str.lower(message.content[:23]) == "<@&1056746274109530116>":
                 response = openai.Completion.create(
                     model="text-davinci-003",
                     prompt=message.content[8:],
                     temperature=0.6,
                 )
+                print("sending: " + response.choices[0].text)
+                await message.channel.send(response.choices[0].text)
+
 
     intents = discord.Intents.default()
     intents.message_content = True
@@ -34,8 +38,9 @@ if __name__ == '__main__':
     intents.message_content = True
     bot = commands.Bot(command_prefix='>', intents=intents)
 
+
+    @bot.command()
+    async def ping(ctx):
+        await ctx.send('pong')
+
     bot.run(os.environ["DISCORD_TOKEN"])
-
-    openai.api_key = os.environ["OPENAI_API_KEY"]
-
-
