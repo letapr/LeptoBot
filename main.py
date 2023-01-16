@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 )
 
                 print("sending: " + response.choices[0].text)
-                # await message.channel.send(response.choices[0].text)
+                await message.channel.send(response.choices[0].text)
 
 
     intents = discord.Intents.default()
