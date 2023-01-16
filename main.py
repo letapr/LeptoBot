@@ -29,12 +29,12 @@ if __name__ == '__main__':
             if message.content[0] == '<':
                 response = openai.Completion.create(
                     model="text-davinci-003",
-                    prompt=message.content[23:],
+                    prompt=message.content[23:] + " respond in 64 characters or less",
                     temperature=0.6,
                 )
 
                 print("sending: " + response.choices[0].text)
-                await message.channel.send(response.choices[0].text)
+                # await message.channel.send(response.choices[0].text)
 
 
     intents = discord.Intents.default()
@@ -63,3 +63,4 @@ if __name__ == '__main__':
 
 
     bot.run(os.environ["DISCORD_TOKEN"])
+
