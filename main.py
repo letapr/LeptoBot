@@ -29,13 +29,11 @@ if __name__ == '__main__':
             if message.content[0] == '<':
                 response = openai.Completion.create(
                     model="text-davinci-003",
-                    prompt=message.content[23:] + " respond in 64 characters or less",
-                    temperature=0.6,
+                    prompt=message.content[23:] + " phrase your answer very rudely. respond in under 64 characters",
+                    temperature=1,
                 )
 
-                print("sending: " + response.choices[0].text)
                 await message.channel.send(response.choices[0].text)
-
 
     intents = discord.Intents.default()
     intents.message_content = True
@@ -47,15 +45,14 @@ if __name__ == '__main__':
     intents.members = True
     bot = commands.Bot(command_prefix='>', intents=intents)
 
-
     @client.event
     async def on_message(message):
         if client.user.mentioned_in(message):
-            print(message.content[:23] + " " )
+            print(message.content[:23] + " ")
             response = openai.Completion.create(
                 model="text-davinci-003",
                 prompt=message.content[23:],
-                temperature=0.6,
+                temperature=1,
             )
 
             print("sending: " + response.choices[0].text)
@@ -63,4 +60,3 @@ if __name__ == '__main__':
 
 
     bot.run(os.environ["DISCORD_TOKEN"])
-
